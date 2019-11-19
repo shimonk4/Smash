@@ -1,0 +1,56 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/Commands.cpp
+unistd.h
+-
+string.h
+-
+iostream
+-
+vector
+-
+sstream
+-
+sys/wait.h
+-
+iomanip
+-
+Commands.h
+/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/Commands.h
+
+/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/Commands.h
+vector
+-
+
+/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/main.cpp
+iostream
+-
+unistd.h
+-
+sys/wait.h
+-
+signal.h
+-
+Commands.h
+/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/Commands.h
+signals.h
+/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/signals.h
+
+/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/signals.cpp
+iostream
+-
+signal.h
+-
+signals.h
+/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/signals.h
+Commands.h
+/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/Commands.h
+
+/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/signals.h
+
