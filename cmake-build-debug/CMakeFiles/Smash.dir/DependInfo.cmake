@@ -4,9 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/Commands.cpp" "/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/cmake-build-debug/CMakeFiles/Smash.dir/Commands.cpp.o"
-  "/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/main.cpp" "/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/cmake-build-debug/CMakeFiles/Smash.dir/main.cpp.o"
-  "/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/signals.cpp" "/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/cmake-build-debug/CMakeFiles/Smash.dir/signals.cpp.o"
+  "/cygdrive/c/CSProjects/Smash/Smash/Smash/Commands.cpp" "/cygdrive/c/CSProjects/Smash/Smash/Smash/cmake-build-debug/CMakeFiles/Smash.dir/Commands.cpp.o"
+  "/cygdrive/c/CSProjects/Smash/Smash/Smash/main.cpp" "/cygdrive/c/CSProjects/Smash/Smash/Smash/cmake-build-debug/CMakeFiles/Smash.dir/main.cpp.o"
+  "/cygdrive/c/CSProjects/Smash/Smash/Smash/signals.cpp" "/cygdrive/c/CSProjects/Smash/Smash/Smash/cmake-build-debug/CMakeFiles/Smash.dir/signals.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

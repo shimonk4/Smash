@@ -60,8 +60,8 @@ public:
 class ChangeDirCommand : public BuiltInCommand {
 // TODO: Add your data members public:
     char** plastPwd;
-
-    ChangeDirCommand(const char* cmd_line, char** plastPwd);
+    ChangeDirCommand() : plastPwd(NULL){}
+    ChangeDirCommand(const char* cmd_line, char** plastPwd) : BuiltInCommand(cmd_line),plastPwd(plastPwd){}
     virtual ~ChangeDirCommand() {}
     void execute() override;
 };

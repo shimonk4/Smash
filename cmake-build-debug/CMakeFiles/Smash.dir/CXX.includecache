@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/Commands.cpp
+/cygdrive/c/CSProjects/Smash/Smash/Smash/Commands.cpp
 unistd.h
 -
 string.h
@@ -21,14 +21,16 @@ sys/wait.h
 -
 iomanip
 -
+algorithm
+-
 Commands.h
-/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/Commands.h
+/cygdrive/c/CSProjects/Smash/Smash/Smash/Commands.h
 
-/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/Commands.h
+/cygdrive/c/CSProjects/Smash/Smash/Smash/Commands.h
 vector
 -
 
-/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/main.cpp
+/cygdrive/c/CSProjects/Smash/Smash/Smash/main.cpp
 iostream
 -
 unistd.h
@@ -38,19 +40,21 @@ sys/wait.h
 signal.h
 -
 Commands.h
-/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/Commands.h
+/cygdrive/c/CSProjects/Smash/Smash/Smash/Commands.h
 signals.h
-/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/signals.h
+/cygdrive/c/CSProjects/Smash/Smash/Smash/signals.h
+string.h
+-
 
-/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/signals.cpp
+/cygdrive/c/CSProjects/Smash/Smash/Smash/signals.cpp
 iostream
 -
 signal.h
 -
 signals.h
-/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/signals.h
+/cygdrive/c/CSProjects/Smash/Smash/Smash/signals.h
 Commands.h
-/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/Commands.h
+/cygdrive/c/CSProjects/Smash/Smash/Smash/Commands.h
 
-/cygdrive/c/Users/Shimon Korkus/CLionProjects/Smash/signals.h
+/cygdrive/c/CSProjects/Smash/Smash/Smash/signals.h
 

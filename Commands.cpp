@@ -5,6 +5,7 @@
 #include <sstream>
 #include <sys/wait.h>
 #include <iomanip>
+#include <algorithm>
 #include "Commands.h"
 
 using namespace std;
@@ -28,7 +29,7 @@ int _parseCommandLine(const char* cmd_line, char** args) {
     while(getline(check1, intermediate, ' '))
     {
         args[i] = (char*)malloc(intermediate.length()+1);
-        memset(args[i], 0, intermediate.length()+1);
+        memset(*(args+i), 0, intermediate.length()+1);
         strcpy(args[i], intermediate.c_str());
         args[++i] = NULL;
     }
@@ -81,8 +82,49 @@ bool checkIfPwd(char* toCheck){
            (toCheck[0] == 'p' && toCheck[1] == 'w' && toCheck[2] == 'd' && toCheck[3] == ' ');
 }
 
-Command * SmallShell::CreateCommand(const char* cmd_line) {
+bool checkIfCd(char* toCheck){
 
+}
+
+bool checkIfCd_(char* toCheck){
+
+}
+
+void removeExtraSpaces(char* input, char* output)
+{
+    int inputIndex = 0;
+    int outputIndex = 0;
+    while(input[inputIndex] != '\0')
+    {
+        output[outputIndex] = input[inputIndex];
+
+        if(input[inputIndex] == ' ')
+        {
+            while(input[inputIndex + 1] == ' ')
+            {
+                // skip over any extra spaces
+                inputIndex++;
+            }
+        }
+
+        outputIndex++;
+        inputIndex++;
+    }
+
+    // null-terminate output
+    output[outputIndex] = '\0';
+}
+
+void ltrim(std::string &s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
+        return !std::isspace(ch);
+    }));
+}
+
+Command * SmallShell::CreateCommand(const char* cmd_line) {
+  string lala = string(cmd_line);
+  ltrim(lala);
+  cout << lala << endl;
   string cmd_s = string(cmd_line);
   int i = 0;
   char whiteSpace = ' ';
@@ -96,6 +138,8 @@ Command * SmallShell::CreateCommand(const char* cmd_line) {
   if (checkIfPwd(cmdWithoutSpaces)) {
       delete[] cmdWithoutSpaces;
       return new GetCurrDirCommand(cmd_line);
+  } else if(checkIfCd(cmdWithoutSpaces)) {
+
   }
 
 
