@@ -6,9 +6,14 @@
 #include <sys/wait.h>
 #include <iomanip>
 #include <algorithm>
+#include <iterator>
+#include <forward_list>
 #include "Commands.h"
 
-using namespace std;
+
+using std::cin;
+using std::cout;
+using std::endl;
 
 #if 0
 #define FUNC_ENTRY()  \
@@ -65,94 +70,175 @@ void _removeBackgroundSign(char* cmd_line) {
 
 // TODO: Add your implementation for classes in Commands.h
 
-SmallShell::SmallShell() {
-// TODO: add your implementation
-}
-
-SmallShell::~SmallShell() {
-// TODO: add your implementation
-}
-
-/**
-* Creates and returns a pointer to Command class which matches the given command line (cmd_line)
-*/
-
-bool checkIfPwd(char* toCheck){
+bool checkIfPwd(string toCheck){
     return (toCheck[0] == 'p' && toCheck[1] == 'w' && toCheck[2] == 'd' && string(toCheck).size() == 3) ||
            (toCheck[0] == 'p' && toCheck[1] == 'w' && toCheck[2] == 'd' && toCheck[3] == ' ');
 }
 
-bool checkIfCd(char* toCheck){
-
+bool checkIfCd(string toCheck){
+    char** args = new char*[30];
+    _parseCommandLine(toCheck.c_str(),args);
+    if((toCheck[0] == 'c' && toCheck[1] == 'd' && toCheck[2] == ' ') &&
+         (args[1] != NULL) && (*args[1] != '-')&& (args[2] == NULL)) {
+        delete[] args;
+        return true;
+    }
+    if((toCheck[0] == 'c' && toCheck[1] == 'd' && toCheck[2] == ' ') &&
+       (args[1] != NULL)&& (args[2] != NULL)) {
+        cout << "smash error: cd: too many arguments" << endl;
+    }
+    delete[] args;
+    return false;
 }
 
-bool checkIfCd_(char* toCheck){
-
+bool checkIfCd_(string toCheck){
+    char** args = new char*[30];
+    _parseCommandLine(toCheck.c_str(),args);
+    if((toCheck[0] == 'c' && toCheck[1] == 'd' && toCheck[2] == ' ' && toCheck[3]== '-')
+       && (args[2] == NULL)){
+        delete[] args;
+        return true;
+    }
+    delete[] args;
+    return false;
 }
 
-void removeExtraSpaces(char* input, char* output)
+bool checkIfHistory(string toCheck){
+    return (toCheck[0] == 'h' && toCheck[1] == 'i' && toCheck[2] == 's' && toCheck[3] == 't'
+            && toCheck[4] == 'o' && toCheck[5] == 'r' && toCheck[6] == 'y') ||
+           (toCheck[0] == 'h' && toCheck[1] == 'i' && toCheck[2] == 's' && toCheck[3] == 't'
+           && toCheck[4] == 'o' && toCheck[5] == 'r' && toCheck[6] == 'y' && toCheck[7] == ' ');
+}
+
+bool checkIfShowPid(string toCheck) {
+    return (toCheck[0] == 's' && toCheck[1] == 'h' && toCheck[2] == 'o' && toCheck[3] == 'w'
+            && toCheck[4] == 'p' && toCheck[5] == 'i' && toCheck[6] == 'd') ||
+           (toCheck[0] == 's' && toCheck[1] == 'h' && toCheck[2] == 'o' && toCheck[3] == 'w'
+            && toCheck[4] == 'p' && toCheck[5] == 'i' && toCheck[6] == 'd' && toCheck[7] == ' ');
+}
+
+void removeExtraSpaces(string &s)
 {
-    int inputIndex = 0;
-    int outputIndex = 0;
-    while(input[inputIndex] != '\0')
-    {
-        output[outputIndex] = input[inputIndex];
+    // n is length of the original string
+    int n = s.length();
 
-        if(input[inputIndex] == ' ')
+    //pointer i to keep trackof next position and j to traverse
+    int i = 0, j = -1;
+
+    // flag that sets to true is space is found
+    bool spaceFound = false;
+
+    // Handles leading spaces
+    while (++j < n && s[j] == ' ');
+
+    // read all characters of original string
+    while (j <= n)
+    {
+        // if current characters is non-space
+        if (s[j] != ' ')
         {
-            while(input[inputIndex + 1] == ' ')
+            //if any preceeding space before ,.and ?
+            if ((s[j] == '.' || s[j] == ',' ||
+                 s[j] == '?') && i - 1 >= 0 &&
+                s[i - 1] == ' ')
+                s[i - 1] = s[j++];
+
+            else
+                // copy current character to index i
+                // and increment both i and j
+                s[i++] = s[j++];
+
+            // set space flag to false when any
+            // non-space character is found
+            spaceFound = false;
+        }
+            // if current character is a space
+        else if (s[j++] == ' ')
+        {
+            // If space is seen first time after a word
+            if (!spaceFound)
             {
-                // skip over any extra spaces
-                inputIndex++;
+                s[i++] = ' ';
+                spaceFound = true;
             }
         }
-
-        outputIndex++;
-        inputIndex++;
     }
 
-    // null-terminate output
-    output[outputIndex] = '\0';
-}
-
-void ltrim(std::string &s) {
-    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
-        return !std::isspace(ch);
-    }));
+    // Remove trailing spaces
+    if (i <= 1)
+        s.erase(s.begin() + i, s.end());
+    else
+        s.erase(s.begin() + i - 1, s.end());
 }
 
 Command * SmallShell::CreateCommand(const char* cmd_line) {
-  string lala = string(cmd_line);
-  ltrim(lala);
-  cout << lala << endl;
+
   string cmd_s = string(cmd_line);
-  int i = 0;
-  char whiteSpace = ' ';
-  while(cmd_s[i] == whiteSpace) {
-      i++;
+  removeExtraSpaces(cmd_s);
+  char wd[512];
+  if(isFirstCmd) {
+      Node command(string(cmd_line),1);
+      isFirstCmd = false;
+      history->push_front(command);
+  } else {
+      if(history->front().getCommand() == string(cmd_line)){
+        history->front().incGetId();
+      } else {
+          Node command(string(cmd_line), history->front().getSeqId() + 1);
+          if (history->size() == 50) {
+              history->pop_back();
+              history->push_front(command);
+          } else {
+              history->push_front(command);
+          }
+      }
   }
-  char* cmdWithoutSpaces = new char[cmd_s.size()-i];
-  for (int j = i,k=0; j < cmd_s.size() ; ++j,k++) {
-        cmdWithoutSpaces[k] = cmd_s[j];
-  }
-  if (checkIfPwd(cmdWithoutSpaces)) {
-      delete[] cmdWithoutSpaces;
+    cout << "From Here: " << endl;
+
+    cout << history->begin()->getSeqId();
+    cout << " ";
+    cout << history->begin()->getCommand() << endl;
+    cout << "Untill Here!" << endl;
+  if (checkIfPwd(cmd_s) && cmd_line) {
       return new GetCurrDirCommand(cmd_line);
-  } else if(checkIfCd(cmdWithoutSpaces)) {
+  } else if(checkIfCd(cmd_s) && (cmd_line) ) {
+      char** args = new char*[30];
+      _parseCommandLine(cmd_s.c_str(),args);
+      if(getwd(wd) == NULL) {
+          perror("smash error: getwd failed");
+      }
+      setLastPwd(wd);
+      if(chdir(args[1]) == -1){
+          perror("smash error: chdir failed");
+      }
+      delete[] args;
+      return new ChangeDirCommand();
+  } else if(checkIfCd_(cmd_s)){
+      if(getwd(wd) == NULL) {
+          perror("smash error: getwd failed");
+      }
+      if(getLastPwd() == nullptr){
+          cout << "smash error: cd: OLDPWD not set" << endl;
+      } else {
+          if(chdir(getLastPwd()) == -1){
+              perror("smash error: chdir failed");
+          }
+          setLastPwd(wd);
+          return new ChangeDirCommand();
+      }
+  } else if(checkIfHistory(cmd_s)) {
+      history->reverse();
+      for (auto it=history->begin(); it!= history->end(); it++){
+          cout << right << setw(5) << " " << (*it).getSeqId() << " " << (*it).getCommand() << endl;
+      }
+      history->reverse();
+      return new HistoryCommand();
+  } else if(checkIfShowPid(cmd_s)) {
+      cout << "smash pid is " << getpid() << endl;
+  } else if() {
 
+      return nullptr;
   }
-
-
-
-
-
-  /* else if ...
-  .....
-  else {
-    return new ExternalCommand(cmd_line);
-  }
-  */
-    return nullptr;
 }
 
 void SmallShell::executeCommand(const char *cmd_line) {
@@ -161,11 +247,10 @@ void SmallShell::executeCommand(const char *cmd_line) {
     Command* cmd = CreateCommand(cmd_line);
     if(!cmd){
         std::cout << "smash error: > ";
-        std::cout << "\"";
-        std::cout << cmd_line;
-        std::cout << "\"" << std::endl;
+        std::cout << "\"" << cmd_line << "\"" << std::endl ;
     } else {
         cmd->execute();
+        delete cmd;
     }
     // Please note that you must fork smash process for some commands (e.g., external commands....)
 }
@@ -175,6 +260,13 @@ void GetCurrDirCommand::execute() {
     if(getwd(wd) == NULL) {
         perror("smash error: getwd failed");
     } else {
-            std::cout << wd << std::endl;
+        std::cout << wd << std::endl;
     }
+}
+
+void ChangeDirCommand::execute() {
+
+}
+
+void HistoryCommand::execute() {
 }

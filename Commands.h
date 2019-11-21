@@ -3,6 +3,10 @@
 
 
 #include <vector>
+#include <cstring>
+#include <list>
+
+using namespace std;
 
 #define COMMAND_ARGS_MAX_LENGTH (200)
 #define COMMAND_MAX_ARGS (20)
@@ -59,9 +63,9 @@ public:
 
 class ChangeDirCommand : public BuiltInCommand {
 // TODO: Add your data members public:
-    char** plastPwd;
-    ChangeDirCommand() : plastPwd(NULL){}
-    ChangeDirCommand(const char* cmd_line, char** plastPwd) : BuiltInCommand(cmd_line),plastPwd(plastPwd){}
+public:
+    ChangeDirCommand() = default;
+    ChangeDirCommand(const char* cmd_line, char** plastPwd) : BuiltInCommand(cmd_line){}
     virtual ~ChangeDirCommand() {}
     void execute() override;
 };
@@ -106,6 +110,7 @@ public:
 class HistoryCommand : public BuiltInCommand {
     // TODO: Add your data members
 public:
+    HistoryCommand() = default;
     HistoryCommand(const char* cmd_line, CommandsHistory* history);
     virtual ~HistoryCommand() {}
     void execute() override;
@@ -170,12 +175,60 @@ public:
     void execute() override;
 };
 
+class Node{
+    string cmd_line;
+    int seqId;
+public:
+    Node(string cmd) :seqId(1) {}
+    Node(string cmd,int seqId) : cmd_line(cmd),seqId(seqId) {}
+
+    string getCommand(){
+        return cmd_line;
+    }
+    int getSeqId(){
+        return seqId;
+    }
+    void incGetId(){
+        seqId++;
+    }
+
+
+};
 
 class SmallShell {
 private:
     // TODO: Add your data members
-    SmallShell();
+
+    SmallShell() {
+        history = new list<Node>;
+        lastPwd = new char[1024];
+        flagForFirstPwd = 0;
+        isFirstCmd = true;
+    };
+    std::list<Node>* history;
+    char* lastPwd; // pwd before we entered cd
+    bool flagForFirstPwd;
+    bool isFirstCmd;
 public:
+
+    char* getLastPwd(){
+        if(!flagForFirstPwd){
+            return nullptr;
+        } else {
+            return lastPwd;
+        }
+    }
+
+    void setLastPwd(char* toSet){
+            int i = 0;
+            while(toSet[i]) {
+                lastPwd[i] = toSet[i];
+                i++;
+            }
+            lastPwd[i] = '\0';
+            flagForFirstPwd = true;
+    }
+
     Command *CreateCommand(const char* cmd_line);
     SmallShell(SmallShell const&)      = delete; // disable copy ctor
     void operator=(SmallShell const&)  = delete; // disable = operator
@@ -185,9 +238,16 @@ public:
         // Instantiated on first use.
         return instance;
     }
-    ~SmallShell();
+
+    ~SmallShell(){
+        delete history;
+        delete[] lastPwd;
+    };
+
     void executeCommand(const char* cmd_line);
     // TODO: add extra methods as needed
 };
+
+
 
 #endif //SMASH_COMMAND_H_

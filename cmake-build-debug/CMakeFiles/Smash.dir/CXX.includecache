@@ -23,11 +23,19 @@ iomanip
 -
 algorithm
 -
+iterator
+-
+forward_list
+-
 Commands.h
 /cygdrive/c/CSProjects/Smash/Smash/Smash/Commands.h
 
 /cygdrive/c/CSProjects/Smash/Smash/Smash/Commands.h
 vector
+-
+cstring
+-
+list
 -
 
 /cygdrive/c/CSProjects/Smash/Smash/Smash/main.cpp
